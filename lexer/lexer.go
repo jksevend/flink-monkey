@@ -29,6 +29,15 @@ func (lexer *Lexer) advance() {
 	lexer.readPosition += 1
 }
 
+// peek ahead by one character in the input
+func (lexer *Lexer) peek() byte {
+	if lexer.readPosition >= len(lexer.input) {
+		return 0
+	} else {
+		return lexer.input[lexer.readPosition]
+	}
+}
+
 // eatWhitespace skips any whitespace characters and advances the Lexer
 func (lexer *Lexer) eatWhitespace() {
 	for lexer.char == ' ' || lexer.char == '\t' || lexer.char == '\n' || lexer.char == '\r' {
@@ -98,13 +107,28 @@ func (lexer *Lexer) NextToken() token.Token {
 	case '}':
 		nextToken = token.NewToken(token.RBRACE, lexer.char)
 	case '=':
-		nextToken = token.NewToken(token.ASSIGN, lexer.char)
+		// Check for '=='
+		if lexer.peek() == '=' {
+			char := lexer.char
+			lexer.advance()
+			nextToken = token.NewMultiCharToken(token.EQ, string(char)+string(lexer.char))
+		} else {
+			nextToken = token.NewToken(token.ASSIGN, lexer.char)
+		}
+
 	case '+':
 		nextToken = token.NewToken(token.PLUS, lexer.char)
 	case '-':
 		nextToken = token.NewToken(token.MINUS, lexer.char)
 	case '!':
-		nextToken = token.NewToken(token.BANG, lexer.char)
+		// Check for '!='
+		if lexer.peek() == '=' {
+			char := lexer.char
+			lexer.advance()
+			nextToken = token.NewMultiCharToken(token.NOT_EQ, string(char)+string(lexer.char))
+		} else {
+			nextToken = token.NewToken(token.BANG, lexer.char)
+		}
 	case '/':
 		nextToken = token.NewToken(token.SLASH, lexer.char)
 	case '*':

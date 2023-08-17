@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"flink_monkey/repl"
+	"fmt"
+	"os"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Printf("FlinkMonkey v%s\n", VERSION)
+	repl.Start(os.Stdin, os.Stdout)
 }
