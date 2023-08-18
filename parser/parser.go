@@ -45,6 +45,8 @@ func (parser *Parser) parseStatement() ast.Statement {
 	switch parser.currentToken.Type {
 	case token.VAR:
 		return parser.parseVarStatement()
+	case token.RETURN:
+		return parser.parseReturnStatement()
 	default:
 		return nil
 	}
@@ -79,6 +81,21 @@ func (parser *Parser) parseVarStatement() *ast.VarStatement {
 	for !parser.currentTokenIs(token.SEMICOLON) {
 		parser.advance()
 	}
+	return statement
+}
+
+func (parser *Parser) parseReturnStatement() ast.Statement {
+	// Construct the node
+	statement := &ast.ReturnStatement{Token: parser.currentToken}
+
+	parser.advance()
+
+	//TODO: We're skipping the expressions until we
+	// encounter a semicolon
+	for !parser.currentTokenIs(token.SEMICOLON) {
+		parser.advance()
+	}
+
 	return statement
 }
 

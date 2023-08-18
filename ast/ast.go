@@ -53,7 +53,7 @@ func (id *Identifier) TokenLiteral() string {
 
 // VarStatement ::= var <identifier> = <expression>
 type VarStatement struct {
-	Token token.Token // the token.LET token
+	Token token.Token
 	Name  *Identifier
 	Value Expression
 }
@@ -64,3 +64,12 @@ func (vs *VarStatement) statementNode() {
 func (vs *VarStatement) TokenLiteral() string {
 	return vs.Token.Literal
 }
+
+// ReturnStatement ::= return <expression>;
+type ReturnStatement struct {
+	Token       token.Token
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode()       {}
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
